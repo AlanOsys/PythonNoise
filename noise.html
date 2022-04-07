@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<head>
+<title>Noise</title>
+
+<style type="text/css">
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    outline: none;
+    
+}
+    *{
+        overflow:hidden;
+    }
+    #container *{
+        position: absolute;
+    }
+    body {
+
+min-height: 100vh;
+width: 100%;
+}
+    #Bar{
+    width: 100%;
+    height: 8vh;
+    background-color: rgb(100, 100, 218);
+    position: fixed;
+    top: 0%;
+    z-index: 1;
+    
+}
+#Bar *{
+    width: auto;
+    height: 7vh;
+    font-size: 4vh;
+}
+</style>
+</head>
+
+<body>
+    <div id="Bar">
+        <p id="Title" style="float: left; margin-right: 7vw;">Alan Osys</p>
+        <button id="home" style="float: left; margin-right: 5px;"onclick="location.href='index.html';">Home</button>
+        <button id="aboutme" style="float: left; margin-right: 5px;">About</button>
+        <button id="art" style="float: left; margin-right: 5px;"onclick="location.href='art.html';">Art</button>
+        <button id="toggle" style="float: right;"onclick="Toggle()">LightMode</button>
+    </div>
+    <div id="container"></div>
+
+<script>
+    function Toggle(){
+        
+        button = document.getElementById("toggle");
+        if(button.innerHTML == "LightMode"){
+            button.innerHTML = "DarkMode";
+            displayNoise()
+        }
+        else{
+            button.innerHTML = "LightMode";
+            proceduralGen();
+        }
+    }
+function createNoise(){
+    
+    noise = []
+    range = 6400
+    elevation = 50
+    density = 400
+    for(let i = 0;i<Math.sqrt(range)+100;i++){
+        row = []
+        for(let j = 0; j<Math.sqrt(range)+100;j++){
+            row.push(0)
+        }
+        noise.push(row)
+    }
+    for(let i = 0;i<Math.sqrt(range)+100;i++){
+        
+        for(let j = 0; j<Math.sqrt(range)+100;j++){
+            value = noise[i][j] + Math.random()*(density-(-density))+density
+            if(value>255){
+                value = value/elevation
+            }
+            if(value<0){
+                value = value/-elevation
+            }
+            try{
+                noise[i-1][j-1] += value
+            }
+            catch{
+                continue
+            }
+            try{
+                noise[i][j-1] += value
+            }
+            catch{
+                continue
+            }
+            try{
+                noise[i+1][j-1] += value
+            }
+            catch{
+                continue
+            }try{
+                noise[i-1][j] += value
+            }
+            catch{
+                continue
+            }
+            
+            try{
+                noise[i+1][j] += value
+            }
+            catch{
+                continue
+            }
+            try{
+                noise[i-1][j+1] += value
+            }
+            catch{
+                continue
+            }
+            try{
+                noise[i][j+1] += value
+            }
+            catch{
+                continue
+            }
+            try{
+                noise[i+1][j+1] += value
+            }
+            catch{
+                continue
+            }
+            try{
+                noise[i][j] += value
+            }
+            catch{
+                continue
+            }
+
+                
+        
+        }
+        
+    }
+    return noise
+    
+}
+noise = createNoise()
+function displayNoise(){
+    container = document.getElementById("container");
+    
+    for(let i = 0;i<Math.sqrt(range)+100;i++){
+        for(let j = 0;j<Math.sqrt(range)+100;j++){
+            
+            cell = document.createElement("div");
+            cell.style.width = 10+'px';
+            cell.style.height = 10+'px';
+            cell.style.left = 10*i+'px';
+            cell.style.top = 10*j+'px';
+            cell.style.background = 'rgb('+noise[i][j]+','+noise[i][j]+','+noise[i][j]+')';
+            container.appendChild(cell);
+        }
+    }
+}
+function proceduralGen(){
+    container = document.getElementById("container");
+    
+    for(let i = 0;i<Math.sqrt(range)+100;i++){
+        for(let j = 0;j<Math.sqrt(range)+100;j++){
+            
+            cell = document.createElement("div");
+            cell.style.width = 10+'px';
+            cell.style.height = 10+'px';
+            cell.style.left = 10*i-20+'px';
+            cell.style.top = 10*j-20+'px';
+
+            if(noise[i][j] < 140){
+                cell.style.background = 'rgb('+0+','+0+','+noise[i][j]+')';
+            }
+            else if(noise[i][j] >= 140 && noise[i][j] < 160){
+                cell.style.background = 'rgb('+noise[i][j]+','+noise[i][j]+','+0+')';
+            }
+            else if(noise[i][j] >= 160){
+                cell.style.background = 'rgb('+0+','+noise[i][j]+','+0+')';
+            }
+            
+            container.appendChild(cell);
+        }
+    }
+}
+//displayNoise()
+proceduralGen()
+</script>
+</body>
